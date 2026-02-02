@@ -91,6 +91,10 @@ HARI_INDO = ("Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu")
 
 aiohttp_session: Optional["aiohttp.ClientSession"] = None
 
+HTML_RATE_LIMITED = """<!DOCTYPE html>
+<html><head><title>429 Too Many Requests</title></head>
+<body><h1>Too Many Requests</h1><p>Silakan coba lagi nanti.</p></body></html>"""
+
 
 class RateLimiter:
     __slots__ = ('_requests', '_lock', '_last_cleanup')
@@ -327,10 +331,10 @@ def calc_profit(h: dict, modal: int, pokok: int) -> str:
         val = int(gram * sell_rate - pokok)
         gram_str = f"{gram:,.4f}".replace(",", ".")
         if val > 0:
-            return f"+{format_rupiah(val)}🟢➺{gram_str}gr"
+            return f"+{format_rupiah(val)}🟢{gram_str}gr"
         elif val < 0:
-            return f"-{format_rupiah(abs(val))}🔴➺{gram_str}gr"
-        return f"{format_rupiah(0)}➖➺{gram_str}gr"
+            return f"-{format_rupiah(abs(val))}🔴{gram_str}gr"
+        return f"{format_rupiah(0)}➖{gram_str}gr"
     except:
         return "-"
 
@@ -580,8 +584,8 @@ h3{margin:20px 0 10px}
 .dark-mode .tele-text{color:#00E124}
 #jam{font-size:1.4em;color:#ff1744;font-weight:bold;margin-bottom:8px}
 table.dataTable{width:100%!important;border-collapse:collapse}
-table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:0.95em;border-bottom:2px solid #ddd}
-table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee}
+table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:1em;border-bottom:2px solid #ddd}
+table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee;font-size:1em}
 th.waktu,td.waktu{width:78px;min-width:72px;max-width:82px;text-align:center;padding-left:2px!important;padding-right:2px!important}
 th.transaksi,td.transaksi{text-align:left;min-width:220px}
 th.profit,td.profit{width:155px;min-width:145px;max-width:165px;text-align:left;padding-left:8px!important;padding-right:8px!important}
@@ -642,7 +646,6 @@ th.profit,td.profit{width:155px;min-width:145px;max-width:165px;text-align:left;
 .dark-mode .limit-label .limit-num{background:#00E124;color:#181a1b}
 .dark-mode .card{border-color:#444}
 .dark-mode .card-calendar{background:#23272b}
-
 #tabel thead th.waktu,
 #tabel tbody td.waktu{
 position:sticky;
@@ -659,7 +662,6 @@ background:#23272b;
 .dark-mode #tabel tbody td.waktu{
 background:#23272b;
 }
-
 @keyframes blink-yellow{
 0%,100%{background-color:#fff}
 50%{background-color:#ffeb3b}
@@ -674,8 +676,6 @@ animation:blink-yellow 0.4s ease-in-out 5;
 .dark-mode #tabel tbody tr.blink-row td.waktu{
 animation:blink-yellow-dark 0.4s ease-in-out 5;
 }
-
-/* TABLET LANDSCAPE & PORTRAIT (768px - 1024px) */
 @media(min-width:768px) and (max-width:1024px){
 body{padding:15px;padding-bottom:50px}
 h2{font-size:1.15em}
@@ -692,50 +692,44 @@ h3{font-size:1.05em;margin:15px 0 8px}
 .card-calendar{max-width:100%;height:auto}
 .calendar-iframe{height:400px;min-width:680px}
 .dt-top-controls{flex-direction:row;justify-content:space-between;gap:8px;margin-bottom:8px;padding:6px 0}
-.dataTables_wrapper .dataTables_length{font-size:13px!important}
-.dataTables_wrapper .dataTables_filter{font-size:13px!important}
-.dataTables_wrapper .dataTables_filter input{width:100px!important;font-size:13px!important;padding:5px 8px!important}
-.dataTables_wrapper .dataTables_length select{font-size:13px!important;padding:4px!important}
-.dataTables_wrapper .dataTables_paginate .paginate_button{padding:5px 12px!important;font-size:13px!important}
-/* Table sizing for tablet */
-#tabel{min-width:950px!important;table-layout:fixed!important}
-#tabel thead th{font-size:13px!important;padding:8px 5px!important}
-#tabel tbody td{font-size:12px!important;padding:7px 4px!important}
-/* Waktu column */
+.dataTables_wrapper .dataTables_length{font-size:14px!important}
+.dataTables_wrapper .dataTables_filter{font-size:14px!important}
+.dataTables_wrapper .dataTables_filter input{width:100px!important;font-size:14px!important;padding:5px 8px!important}
+.dataTables_wrapper .dataTables_length select{font-size:14px!important;padding:4px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:6px 14px!important;font-size:14px!important}
+#tabel{min-width:1000px!important;table-layout:fixed!important}
+#tabel thead th{font-size:15px!important;padding:10px 6px!important;font-weight:bold!important}
+#tabel tbody td{font-size:14px!important;padding:9px 5px!important}
 #tabel thead th.waktu,
 #tabel tbody td.waktu{
-width:75px!important;
-min-width:70px!important;
-max-width:80px!important;
-padding-left:2px!important;
-padding-right:2px!important;
+width:80px!important;
+min-width:75px!important;
+max-width:85px!important;
+padding-left:3px!important;
+padding-right:3px!important;
 }
-/* Transaksi column - FIXED WIDTH */
 #tabel thead th.transaksi,
 #tabel tbody td.transaksi{
-width:230px!important;
-min-width:225px!important;
-max-width:235px!important;
-padding:6px 8px!important;
+width:250px!important;
+min-width:245px!important;
+max-width:255px!important;
+padding:8px 10px!important;
 }
-/* Profit columns */
 #tabel thead th.profit,
 #tabel tbody td.profit{
-width:125px!important;
-min-width:120px!important;
-max-width:130px!important;
+width:130px!important;
+min-width:125px!important;
+max-width:135px!important;
 padding-left:6px!important;
 padding-right:6px!important;
 }
 .profit-order-btns{display:flex}
-.profit-btn{padding:5px 10px;font-size:12px}
+.profit-btn{padding:6px 12px;font-size:13px}
 .chart-header{flex-direction:row;gap:10px}
 .chart-header h3{font-size:1em}
 .limit-label{font-size:0.9em}
 .limit-label .limit-num{font-size:1.05em;padding:2px 7px}
 }
-
-/* MOBILE LARGE & TABLET SMALL (576px - 767px) */
 @media(min-width:576px) and (max-width:767px){
 body{padding:12px;padding-bottom:50px}
 h2{font-size:1.05em}
@@ -755,47 +749,41 @@ h3{font-size:0.95em;margin:12px 0 8px}
 .calendar-wrap{margin:0 -12px;padding:0 12px;width:calc(100% + 24px)}
 .calendar-iframe{height:380px;min-width:620px}
 .dt-top-controls{flex-direction:row;justify-content:space-between;gap:5px;margin-bottom:8px;padding:5px 0}
-.dataTables_wrapper .dataTables_length{font-size:12px!important}
-.dataTables_wrapper .dataTables_filter{font-size:12px!important}
-.dataTables_wrapper .dataTables_filter input{width:85px!important;font-size:12px!important;padding:4px 6px!important}
-.dataTables_wrapper .dataTables_length select{font-size:12px!important;padding:3px!important}
-.dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important}
-/* Table sizing */
-#tabel{min-width:880px!important;table-layout:fixed!important}
-#tabel thead th{font-size:12px!important;padding:7px 4px!important}
-#tabel tbody td{font-size:11px!important;padding:6px 3px!important}
-/* Waktu column */
+.dataTables_wrapper .dataTables_length{font-size:13px!important}
+.dataTables_wrapper .dataTables_filter{font-size:13px!important}
+.dataTables_wrapper .dataTables_filter input{width:85px!important;font-size:13px!important;padding:4px 6px!important}
+.dataTables_wrapper .dataTables_length select{font-size:13px!important;padding:3px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:5px 12px!important;font-size:13px!important}
+#tabel{min-width:950px!important;table-layout:fixed!important}
+#tabel thead th{font-size:14px!important;padding:9px 5px!important;font-weight:bold!important}
+#tabel tbody td{font-size:13px!important;padding:8px 4px!important}
 #tabel thead th.waktu,
 #tabel tbody td.waktu{
-width:70px!important;
-min-width:65px!important;
-max-width:75px!important;
+width:75px!important;
+min-width:70px!important;
+max-width:80px!important;
 }
-/* Transaksi column - FIXED */
 #tabel thead th.transaksi,
 #tabel tbody td.transaksi{
-width:210px!important;
-min-width:205px!important;
-max-width:215px!important;
-padding:5px 6px!important;
+width:235px!important;
+min-width:230px!important;
+max-width:240px!important;
+padding:7px 8px!important;
 }
-/* Profit columns */
 #tabel thead th.profit,
 #tabel tbody td.profit{
-width:115px!important;
-min-width:110px!important;
-max-width:120px!important;
-padding-left:4px!important;
-padding-right:4px!important;
+width:125px!important;
+min-width:120px!important;
+max-width:130px!important;
+padding-left:5px!important;
+padding-right:5px!important;
 }
 .profit-order-btns{display:flex}
-.profit-btn{padding:4px 9px;font-size:11px}
+.profit-btn{padding:5px 10px;font-size:12px}
 .chart-header{flex-direction:row;gap:8px}
 .chart-header h3{font-size:0.95em}
 .limit-label{font-size:0.85em}
 }
-
-/* MOBILE MEDIUM (480px - 575px) */
 @media(min-width:480px) and (max-width:575px){
 body{padding:10px;padding-bottom:48px}
 h2{font-size:1em}
@@ -819,47 +807,41 @@ h3{font-size:0.92em;margin:12px 0 6px}
 #footerApp{padding:6px 0}
 .marquee-text{font-size:12px}
 .dt-top-controls{gap:4px;margin-bottom:6px}
-.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{font-size:11px!important}
-.dataTables_wrapper .dataTables_filter input{width:75px!important;font-size:11px!important}
-.dataTables_wrapper .dataTables_length select{font-size:11px!important}
-.dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 9px!important;font-size:11px!important}
+.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{font-size:12px!important}
+.dataTables_wrapper .dataTables_filter input{width:75px!important;font-size:12px!important}
+.dataTables_wrapper .dataTables_length select{font-size:12px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:5px 10px!important;font-size:12px!important}
 #priceList{max-height:220px}
-/* Table sizing */
-#tabel{min-width:820px!important;table-layout:fixed!important}
-#tabel thead th{font-size:11px!important;padding:6px 3px!important}
-#tabel tbody td{font-size:11px!important;padding:5px 3px!important}
-/* Waktu column */
+#tabel{min-width:900px!important;table-layout:fixed!important}
+#tabel thead th{font-size:13px!important;padding:8px 4px!important;font-weight:bold!important}
+#tabel tbody td{font-size:12px!important;padding:7px 3px!important}
 #tabel thead th.waktu,
 #tabel tbody td.waktu{
-width:65px!important;
-min-width:60px!important;
-max-width:70px!important;
+width:72px!important;
+min-width:68px!important;
+max-width:76px!important;
 }
-/* Transaksi column - FIXED */
 #tabel thead th.transaksi,
 #tabel tbody td.transaksi{
-width:200px!important;
-min-width:195px!important;
-max-width:205px!important;
-padding:5px 5px!important;
+width:220px!important;
+min-width:215px!important;
+max-width:225px!important;
+padding:6px 6px!important;
 }
-/* Profit columns */
 #tabel thead th.profit,
 #tabel tbody td.profit{
-width:108px!important;
-min-width:103px!important;
-max-width:113px!important;
-padding-left:3px!important;
-padding-right:3px!important;
+width:118px!important;
+min-width:113px!important;
+max-width:123px!important;
+padding-left:4px!important;
+padding-right:4px!important;
 }
 .profit-order-btns{display:flex}
-.profit-btn{padding:4px 8px;font-size:11px}
+.profit-btn{padding:5px 9px;font-size:11px}
 .chart-header h3{font-size:0.9em}
 .limit-label{font-size:0.82em}
 .limit-label .limit-num{font-size:1em;padding:1px 6px}
 }
-
-/* MOBILE SMALL (max-width: 479px) */
 @media(max-width:479px){
 body{padding:8px;padding-bottom:45px}
 h2{font-size:0.95em}
@@ -883,43 +865,39 @@ h3{font-size:0.88em;margin:10px 0 6px}
 #footerApp{padding:5px 0}
 .marquee-text{font-size:11px}
 .dt-top-controls{gap:3px;margin-bottom:5px}
-.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{font-size:10px!important}
-.dataTables_wrapper .dataTables_filter input{width:60px!important;font-size:10px!important}
-.dataTables_wrapper .dataTables_length select{font-size:10px!important}
-.dataTables_wrapper .dataTables_paginate .paginate_button{padding:3px 7px!important;font-size:10px!important}
+.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{font-size:11px!important}
+.dataTables_wrapper .dataTables_filter input{width:60px!important;font-size:11px!important}
+.dataTables_wrapper .dataTables_length select{font-size:11px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 8px!important;font-size:11px!important}
 #priceList{max-height:190px}
-/* Table sizing */
-#tabel{min-width:760px!important;table-layout:fixed!important}
-#tabel thead th{font-size:10px!important;padding:5px 2px!important}
-#tabel tbody td{font-size:10px!important;padding:4px 2px!important}
-/* Waktu column */
+#tabel{min-width:850px!important;table-layout:fixed!important}
+#tabel thead th{font-size:12px!important;padding:7px 3px!important;font-weight:bold!important}
+#tabel tbody td{font-size:11px!important;padding:6px 3px!important}
 #tabel thead th.waktu,
 #tabel tbody td.waktu{
-width:60px!important;
-min-width:55px!important;
-max-width:65px!important;
-padding-left:1px!important;
-padding-right:1px!important;
-}
-/* Transaksi column - FIXED */
-#tabel thead th.transaksi,
-#tabel tbody td.transaksi{
-width:190px!important;
-min-width:185px!important;
-max-width:195px!important;
-padding:4px 4px!important;
-}
-/* Profit columns */
-#tabel thead th.profit,
-#tabel tbody td.profit{
-width:100px!important;
-min-width:95px!important;
-max-width:105px!important;
+width:68px!important;
+min-width:64px!important;
+max-width:72px!important;
 padding-left:2px!important;
 padding-right:2px!important;
 }
+#tabel thead th.transaksi,
+#tabel tbody td.transaksi{
+width:210px!important;
+min-width:205px!important;
+max-width:215px!important;
+padding:5px 5px!important;
+}
+#tabel thead th.profit,
+#tabel tbody td.profit{
+width:110px!important;
+min-width:105px!important;
+max-width:115px!important;
+padding-left:3px!important;
+padding-right:3px!important;
+}
 .profit-order-btns{display:flex}
-.profit-btn{padding:3px 6px;font-size:10px}
+.profit-btn{padding:4px 7px;font-size:10px}
 .chart-header h3{font-size:0.85em}
 .limit-label{font-size:0.78em}
 .limit-label .limit-num{font-size:0.95em;padding:1px 5px}
@@ -940,7 +918,7 @@ padding-right:2px!important;
 <thead>
 <tr>
 <th class="waktu">Waktu</th>
-<th class="transaksi">Transaksi</th>
+<th class="transaksi">Data Transaksi</th>
 <th class="profit" id="thP1">Est.cuan 10JT ➺ gr</th>
 <th class="profit" id="thP2">Est.cuan 20JT ➺ gr</th>
 <th class="profit" id="thP3">Est.cuan 30JT ➺ gr</th>
@@ -1166,7 +1144,7 @@ var days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 var hari=days[n.getDay()];
 var tgl=n.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
 var jam=n.toLocaleTimeString('id-ID',{hour12:false});
-document.getElementById("jam").textContent=hari+", "+tgl+" | "+jam+" WIB";
+document.getElementById("jam").textContent=hari+", "+jam+" WIB";
 }
 setInterval(updateJam,1000);
 updateJam();
