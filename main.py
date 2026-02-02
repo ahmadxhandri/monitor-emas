@@ -8,7 +8,6 @@ from functools import lru_cache
 import secrets
 import hashlib
 import time
-import ipaddress
 
 try:
     import orjson
@@ -36,7 +35,6 @@ except ImportError:
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Response, HTTPException, Query, Request, Path
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 try:
     import aiohttp
@@ -73,40 +71,6 @@ RATE_LIMIT_MAX_REQUESTS = 60
 RATE_LIMIT_STRICT_MAX = 120
 RATE_LIMIT_WHITELIST = {"/ws", "/api/state"}
 
-CLOUDFLARE_IP_RANGES = [
-    "173.245.48.0/20",
-    "103.21.244.0/22",
-    "103.22.200.0/22",
-    "103.31.4.0/22",
-    "141.101.64.0/18",
-    "108.162.192.0/18",
-    "190.93.240.0/20",
-    "188.114.96.0/20",
-    "197.234.240.0/22",
-    "198.41.128.0/17",
-    "162.158.0.0/15",
-    "104.16.0.0/13",
-    "104.24.0.0/14",
-    "172.64.0.0/13",
-    "131.0.72.0/22",
-]
-
-CLOUDFLARE_IPV6_RANGES = [
-    "2400:cb00::/32",
-    "2606:4700::/32",
-    "2803:f800::/32",
-    "2405:b500::/32",
-    "2405:8100::/32",
-    "2a06:98c0::/29",
-    "2c0f:f248::/32",
-]
-
-TRUSTED_PROXIES: Set[ipaddress.IPv4Network | ipaddress.IPv6Network] = set()
-for cidr in CLOUDFLARE_IP_RANGES:
-    TRUSTED_PROXIES.add(ipaddress.ip_network(cidr))
-for cidr in CLOUDFLARE_IPV6_RANGES:
-    TRUSTED_PROXIES.add(ipaddress.ip_network(cidr))
-
 history: deque = deque(maxlen=MAX_HISTORY)
 usd_idr_history: deque = deque(maxlen=MAX_USD_HISTORY)
 last_buy: Optional[int] = None
@@ -126,39 +90,6 @@ SUSPICIOUS_PATHS = {
 HARI_INDO = ("Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu")
 
 aiohttp_session: Optional["aiohttp.ClientSession"] = None
-
-
-def is_cloudflare_ip(ip: str) -> bool:
-    try:
-        ip_obj = ipaddress.ip_address(ip)
-        for network in TRUSTED_PROXIES:
-            if ip_obj in network:
-                return True
-    except ValueError:
-        pass
-    return False
-
-
-def get_client_ip(request: Request) -> str:
-    cf_connecting_ip = request.headers.get("CF-Connecting-IP")
-    if cf_connecting_ip:
-        return cf_connecting_ip.strip()
-    x_forwarded_for = request.headers.get("X-Forwarded-For")
-    if x_forwarded_for:
-        return x_forwarded_for.split(",")[0].strip()
-    return request.client.host if request.client else "unknown"
-
-
-def get_cloudflare_country(request: Request) -> str:
-    return request.headers.get("CF-IPCountry", "XX")
-
-
-def get_cloudflare_ray(request: Request) -> str:
-    return request.headers.get("CF-RAY", "")
-
-
-def is_cloudflare_bot(request: Request) -> bool:
-    return request.headers.get("CF-Bot-Score", "100") != "100"
 
 
 class RateLimiter:
@@ -304,6 +235,13 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
+def get_client_ip(request: Request) -> str:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
 def is_ip_blocked(ip: str) -> bool:
     if ip in blocked_ips:
         if time.time() < blocked_ips[ip]:
@@ -347,16 +285,16 @@ def format_rupiah(n: int) -> str:
 
 
 @lru_cache(maxsize=512)
-def get_day_time(date_str: str) -> str:
+def get_time_only(date_str: str) -> str:
     try:
         dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
-        return f"{HARI_INDO[dt.weekday()]} {dt.strftime('%H:%M:%S')}"
+        return dt.strftime('%H:%M:%S')
     except:
         return date_str
 
 
 def format_waktu_only(date_str: str, status: str) -> str:
-    return f"{get_day_time(date_str)}{status}"
+    return f"{get_time_only(date_str)}{status}"
 
 
 @lru_cache(maxsize=256)
@@ -373,9 +311,10 @@ def format_transaction_display(buy: str, sell: str, diff_display: str) -> str:
 
 
 PROFIT_CONFIGS = [
-    (20000000, 19314000),
-    (30000000, 28980000),
-    (40000000, 38652000),
+    (10000000, 9669000),
+    (20000000, 19330000),
+    (30000000, 28995000),
+    (40000000, 38660000),
     (50000000, 48325000),
 ]
 
@@ -407,10 +346,11 @@ def build_single_history_item(h: dict) -> dict:
         "diff_display": diff_display,
         "transaction_display": format_transaction_display(buy_fmt, sell_fmt, diff_display),
         "created_at": h["created_at"],
-        "jt20": calc_profit(h, *PROFIT_CONFIGS[0]),
-        "jt30": calc_profit(h, *PROFIT_CONFIGS[1]),
-        "jt40": calc_profit(h, *PROFIT_CONFIGS[2]),
-        "jt50": calc_profit(h, *PROFIT_CONFIGS[3]),
+        "jt10": calc_profit(h, *PROFIT_CONFIGS[0]),
+        "jt20": calc_profit(h, *PROFIT_CONFIGS[1]),
+        "jt30": calc_profit(h, *PROFIT_CONFIGS[2]),
+        "jt40": calc_profit(h, *PROFIT_CONFIGS[3]),
+        "jt50": calc_profit(h, *PROFIT_CONFIGS[4]),
     }
 
 
@@ -639,18 +579,19 @@ h3{margin:20px 0 10px}
 .dark-mode .tele-link:hover .tele-icon{background:#0288d1}
 .dark-mode .tele-text{color:#00E124}
 #jam{font-size:1.3em;color:#ff1744;font-weight:bold;margin-bottom:8px}
-table.dataTable{width:100%!important}
-table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px}
-table.dataTable tbody td{padding:8px;white-space:nowrap}
-th.waktu,td.waktu{width:100px;min-width:90px;max-width:1050px;text-align:left}
-th.profit,td.profit{width:154px;min-width:80px;max-width:160px;text-align:left}
+table.dataTable{width:100%!important;border-collapse:collapse}
+table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:0.95em;border-bottom:2px solid #ddd}
+table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee}
+th.waktu,td.waktu{width:78px;min-width:72px;max-width:82px;text-align:center;padding-left:2px!important;padding-right:2px!important}
+th.transaksi,td.transaksi{text-align:left;min-width:280px}
+th.profit,td.profit{width:155px;min-width:145px;max-width:165px;text-align:left;padding-left:8px!important;padding-right:8px!important}
 .theme-toggle-btn{padding:0;border:none;border-radius:50%;background:#222;color:#fff;cursor:pointer;font-size:1.5em;width:44px;height:44px;display:flex;align-items:center;justify-content:center;transition:background .3s}
 .theme-toggle-btn:hover{background:#444}
 .dark-mode{background:#181a1b!important;color:#e0e0e0!important}
 .dark-mode #jam{color:#ffb300!important}
 .dark-mode table.dataTable,.dark-mode table.dataTable thead th{background:#23272b!important;color:#e0e0e0!important}
-.dark-mode table.dataTable tbody td{background:#23272b;color:#e0e0e0!important}
-.dark-mode table.dataTable thead th{color:#ffb300!important}
+.dark-mode table.dataTable tbody td{background:#23272b;color:#e0e0e0!important;border-bottom:1px solid #333}
+.dark-mode table.dataTable thead th{color:#ffb300!important;border-bottom:2px solid #444}
 .dark-mode .theme-toggle-btn{background:#ffb300;color:#222}
 .dark-mode .theme-toggle-btn:hover{background:#ffd54f}
 .container-flex{display:flex;gap:15px;flex-wrap:wrap;margin-top:10px}
@@ -679,12 +620,9 @@ th.profit,td.profit{width:154px;min-width:80px;max-width:160px;text-align:left}
 .dataTables_wrapper .dataTables_paginate{margin-top:10px!important;text-align:center!important}
 .tbl-wrap{margin-top:0!important;padding-top:0!important}
 #tabel.dataTable{margin-top:0!important}
-#tabel tbody td.transaksi{line-height:1.3;padding:6px 8px}
-#tabel tbody td.transaksi .harga-beli{display:block;margin-bottom:2px}
-#tabel tbody td.transaksi .harga-jual{display:block;margin-bottom:2px}
-#tabel tbody td.transaksi .selisih{display:block;font-weight:bold}
-.profit-order-btns{display:none;gap:2px;align-items:center;margin-right:6px}
-.profit-btn{padding:4px 7px;border:1px solid #aaa;background:#f0f0f0;border-radius:4px;font-size:11px;cursor:pointer;font-weight:bold;transition:all .2s}
+#tabel tbody td.transaksi{padding:6px 8px}
+.profit-order-btns{display:none;gap:3px;align-items:center;margin-right:6px}
+.profit-btn{padding:5px 10px;border:1px solid #aaa;background:#f0f0f0;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;transition:all .2s}
 .profit-btn:hover{background:#ddd}
 .profit-btn.active{background:#007bff;color:#fff;border-color:#007bff}
 .dark-mode .profit-btn{background:#333;border-color:#555;color:#ccc}
@@ -704,20 +642,39 @@ th.profit,td.profit{width:154px;min-width:80px;max-width:160px;text-align:left}
 .dark-mode .limit-label .limit-num{background:#00E124;color:#181a1b}
 .dark-mode .card{border-color:#444}
 .dark-mode .card-calendar{background:#23272b}
+
+#tabel thead th.waktu,
+#tabel tbody td.waktu{
+position:sticky;
+left:0;
+z-index:2;
+background:#fff;
+}
+#tabel thead th.waktu{
+z-index:3;
+}
+.dark-mode #tabel thead th.waktu{
+background:#23272b!important;
+}
+.dark-mode #tabel tbody td.waktu{
+background:#23272b!important;
+}
+
 @keyframes blink-yellow{
-0%,100%{background-color:transparent}
+0%,100%{background-color:#fff}
 50%{background-color:#ffeb3b}
 }
 @keyframes blink-yellow-dark{
 0%,100%{background-color:#23272b}
 50%{background-color:#ffd600}
 }
-#tabel tbody tr.blink-row td{
+#tabel tbody tr.blink-row td.waktu{
 animation:blink-yellow 0.4s ease-in-out 5!important;
 }
-.dark-mode #tabel tbody tr.blink-row td{
+.dark-mode #tabel tbody tr.blink-row td.waktu{
 animation:blink-yellow-dark 0.4s ease-in-out 5!important;
 }
+
 @media(max-width:768px){
 body{padding:12px;padding-bottom:50px}
 h2{font-size:1.1em}
@@ -726,10 +683,10 @@ h3{font-size:1em;margin:15px 0 8px}
 .tele-icon{width:28px;height:28px}
 .tele-icon svg{width:16px;height:16px}
 .tele-text{font-size:0.85em}
-#jam{font-size:1.5em;margin-bottom:6px}
-table.dataTable{font-size:13px;min-width:620px}
-table.dataTable thead th{padding:8px 6px}
-table.dataTable tbody td{padding:6px}
+#jam{font-size:1.1em;margin-bottom:6px}
+table.dataTable{font-size:13px;min-width:900px}
+table.dataTable thead th{padding:8px 6px;font-size:0.85em}
+table.dataTable tbody td{padding:7px 5px}
 .theme-toggle-btn{width:40px;height:40px;font-size:1.3em}
 .container-flex{flex-direction:column;gap:15px}
 .card-usd,.card-chart{width:100%!important;max-width:100%!important;min-width:0!important}
@@ -745,12 +702,13 @@ table.dataTable tbody td{padding:6px}
 .dataTables_wrapper .dataTables_filter input{width:80px!important;font-size:12px!important;padding:4px 6px!important}
 .dataTables_wrapper .dataTables_length select{font-size:12px!important;padding:3px!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important;min-width:auto!important}
-#tabel{min-width:580px!important}
-#tabel tbody td{font-size:12px!important;padding:5px 4px!important}
-#tabel tbody td.waktu{width:85px!important;min-width:85px!important;max-width:85px!important}
-#tabel tbody td.transaksi{width:140px!important;min-width:140px!important;max-width:140px!important}
-#tabel tbody td.profit{width:120px!important;min-width:120px!important;max-width:120px!important}
-#tabel tbody td.transaksi .harga-beli,#tabel tbody td.transaksi .harga-jual,#tabel tbody td.transaksi .selisih{font-size:11px!important;margin-bottom:1px!important}
+#tabel{min-width:880px!important}
+#tabel tbody td{font-size:12px!important;padding:6px 4px!important}
+#tabel tbody td.waktu{width:70px!important;min-width:65px!important;max-width:75px!important;padding-left:1px!important;padding-right:1px!important}
+#tabel tbody td.transaksi{min-width:220px!important}
+#tabel tbody td.profit{width:125px!important;min-width:115px!important;max-width:135px!important}
+#tabel thead th.profit{font-size:11px!important}
+#tabel thead th.waktu{padding-left:1px!important;padding-right:1px!important}
 .profit-order-btns{display:flex}
 .filter-wrap{flex-wrap:nowrap}
 .chart-header{flex-direction:row;gap:8px}
@@ -766,11 +724,12 @@ h3{font-size:0.95em;margin:12px 0 8px}
 .tele-icon{width:24px;height:24px}
 .tele-icon svg{width:14px;height:14px}
 .tele-text{font-size:0.8em}
-#jam{font-size:1.3em;margin-bottom:5px}
-table.dataTable{font-size:12px;min-width:560px}
-table.dataTable thead th{padding:6px 4px}
+#jam{font-size:1em;margin-bottom:5px}
+table.dataTable{font-size:12px;min-width:850px}
+table.dataTable thead th{padding:6px 4px;font-size:0.8em}
 table.dataTable tbody td{padding:5px 4px}
-th.waktu,td.waktu{width:60px;min-width:50px;max-width:70px}
+th.waktu,td.waktu{width:65px;min-width:60px;max-width:70px}
+th.profit,td.profit{width:115px;min-width:105px;max-width:125px}
 .theme-toggle-btn{width:36px;height:36px;font-size:1.2em}
 .container-flex{gap:12px}
 .card{padding:8px}
@@ -788,13 +747,14 @@ th.waktu,td.waktu{width:60px;min-width:50px;max-width:70px}
 .dataTables_wrapper .dataTables_length select{font-size:11px!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:3px 8px!important;font-size:11px!important}
 #priceList{max-height:200px}
-#tabel{min-width:540px!important}
-#tabel tbody td{font-size:11px!important;padding:4px 3px!important}
-#tabel tbody td.waktu{width:80px!important;min-width:80px!important;max-width:80px!important}
-#tabel tbody td.transaksi{width:130px!important;min-width:130px!important;max-width:130px!important}
-#tabel tbody td.profit{width:110px!important;min-width:110px!important;max-width:110px!important}
-#tabel tbody td.transaksi .harga-beli,#tabel tbody td.transaksi .harga-jual,#tabel tbody td.transaksi .selisih{font-size:10px!important;margin-bottom:0!important}
-.profit-btn{padding:3px 5px;font-size:10px}
+#tabel{min-width:820px!important}
+#tabel tbody td{font-size:11px!important;padding:5px 3px!important}
+#tabel tbody td.waktu{width:62px!important;min-width:58px!important;max-width:68px!important;padding-left:1px!important;padding-right:1px!important}
+#tabel tbody td.transaksi{min-width:200px!important}
+#tabel tbody td.profit{width:110px!important;min-width:100px!important;max-width:120px!important}
+#tabel thead th.profit{font-size:10px!important}
+#tabel thead th.waktu{padding-left:1px!important;padding-right:1px!important;font-size:10px!important}
+.profit-btn{padding:4px 8px;font-size:11px}
 .chart-header h3{font-size:0.9em}
 .limit-label{font-size:0.8em}
 .limit-label .limit-num{font-size:1em;padding:1px 6px}
@@ -815,11 +775,12 @@ th.waktu,td.waktu{width:60px;min-width:50px;max-width:70px}
 <thead>
 <tr>
 <th class="waktu">Waktu</th>
-<th>Data Transaksi</th>
-<th class="profit" id="thP1">Est. cuan 20 JT ➺ gr</th>
-<th class="profit" id="thP2">Est. cuan 30 JT ➺ gr</th>
-<th class="profit" id="thP3">Est. cuan 40 JT ➺ gr</th>
-<th class="profit" id="thP4">Est. cuan 50 JT ➺ gr</th>
+<th class="transaksi">Transaksi</th>
+<th class="profit" id="thP1">Est.cuan 10JT ➺ gr</th>
+<th class="profit" id="thP2">Est.cuan 20JT ➺ gr</th>
+<th class="profit" id="thP3">Est.cuan 30JT ➺ gr</th>
+<th class="profit" id="thP4">Est.cuan 40JT ➺ gr</th>
+<th class="profit" id="thP5">Est.cuan 50JT ➺ gr</th>
 </tr>
 </thead>
 <tbody></tbody>
@@ -829,7 +790,7 @@ th.waktu,td.waktu{width:60px;min-width:50px;max-width:70px}
 <div style="flex:1;min-width:400px">
 <div class="chart-header">
 <h3>Chart Harga Emas (XAU/USD)</h3>
-<span class="limit-label">Limit Bulan ini:<span class="limit-num" id="limitBulan">88888</span></span>
+<span class="limit-label">Limit Bulan:<span class="limit-num" id="limitBulan">88888</span></span>
 </div>
 <div class="card card-chart">
 <div class="tradingview-wrapper" id="tradingview_chart"></div>
@@ -863,12 +824,13 @@ var lastTopRowId='';
 var messageQueue=[];
 var isProcessing=false;
 var latestHistory=[];
+var isFirstRender=true;
 var savedPriority=localStorage.getItem('profitPriority');
-var profitPriority=(savedPriority&&['jt20','jt30','jt40','jt50'].indexOf(savedPriority)!==-1)?savedPriority:'jt20';
-var headerLabels={'jt20':'Est. cuan 20 JT ➺ gr','jt30':'Est. cuan 30 JT ➺ gr','jt40':'Est. cuan 40 JT ➺ gr','jt50':'Est. cuan 50 JT ➺ gr'};
+var profitPriority=(savedPriority&&['jt10','jt20','jt30','jt40','jt50'].indexOf(savedPriority)!==-1)?savedPriority:'jt10';
+var headerLabels={'jt10':'Est.cuan 10JT ➺ gr','jt20':'Est.cuan 20JT ➺ gr','jt30':'Est.cuan 30JT ➺ gr','jt40':'Est.cuan 40JT ➺ gr','jt50':'Est.cuan 50JT ➺ gr'};
 var blinkTimeout=null;
 function getOrderedProfitKeys(){
-var all=['jt20','jt30','jt40','jt50'];
+var all=['jt10','jt20','jt30','jt40','jt50'];
 var result=[profitPriority];
 all.forEach(function(k){if(k!==profitPriority)result.push(k)});
 return result;
@@ -879,6 +841,7 @@ $('#thP1').text(headerLabels[keys[0]]);
 $('#thP2').text(headerLabels[keys[1]]);
 $('#thP3').text(headerLabels[keys[2]]);
 $('#thP4').text(headerLabels[keys[3]]);
+$('#thP5').text(headerLabels[keys[4]]);
 }
 function createTradingViewWidget(){
 var wrapper=document.getElementById('tradingview_chart');
@@ -891,12 +854,20 @@ lengthMenu:[4,8,18,48,88,888,1441],
 order:[],
 deferRender:true,
 dom:'<"dt-top-controls"lf>t<"bottom"p><"clear">',
-columns:[{data:"waktu"},{data:"transaction"},{data:"p1"},{data:"p2"},{data:"p3"},{data:"p4"}],
+columns:[
+{data:"waktu",className:"waktu"},
+{data:"transaction",className:"transaksi"},
+{data:"p1",className:"profit"},
+{data:"p2",className:"profit"},
+{data:"p3",className:"profit"},
+{data:"p4",className:"profit"},
+{data:"p5",className:"profit"}
+],
 language:{emptyTable:"Menunggu data harga emas dari Treasury...",zeroRecords:"Tidak ada data yang cocok",lengthMenu:"Lihat _MENU_",search:"Cari:",paginate:{first:"«",previous:"Kembali",next:"Lanjut",last:"»"}},
 initComplete:function(){
 var filterDiv=$('.dataTables_filter');
 var activeVal=profitPriority.replace('jt','');
-var profitBtns=$('<div class="profit-order-btns" id="profitOrderBtns"><button class="profit-btn'+(activeVal==='20'?' active':'')+'" data-val="20">20</button><button class="profit-btn'+(activeVal==='30'?' active':'')+'" data-val="30">30</button><button class="profit-btn'+(activeVal==='40'?' active':'')+'" data-val="40">40</button><button class="profit-btn'+(activeVal==='50'?' active':'')+'" data-val="50">50</button></div>');
+var profitBtns=$('<div class="profit-order-btns" id="profitOrderBtns"><button class="profit-btn'+(activeVal==='10'?' active':'')+'" data-val="10">10</button><button class="profit-btn'+(activeVal==='20'?' active':'')+'" data-val="20">20</button><button class="profit-btn'+(activeVal==='30'?' active':'')+'" data-val="30">30</button><button class="profit-btn'+(activeVal==='40'?' active':'')+'" data-val="40">40</button><button class="profit-btn'+(activeVal==='50'?' active':'')+'" data-val="50">50</button></div>');
 filterDiv.wrap('<div class="filter-wrap"></div>');
 filterDiv.before(profitBtns);
 $('#profitOrderBtns').on('click','.profit-btn',function(){
@@ -939,18 +910,20 @@ updateTableHeaders();
 var arr=h.map(function(d){
 return{
 waktu:d.waktu_display,
-transaction:'<div class="transaksi"><span class="harga-beli">Harga Beli: '+d.buying_rate+'</span><span class="harga-jual"> Jual: '+d.selling_rate+'</span><span class="selisih">'+d.diff_display+'</span></div>',
+transaction:'Beli: '+d.buying_rate+' | Jual: '+d.selling_rate+' | '+d.diff_display,
 p1:d[keys[0]],
 p2:d[keys[1]],
 p3:d[keys[2]],
-p4:d[keys[3]]
+p4:d[keys[3]],
+p5:d[keys[4]]
 }
 });
 table.clear().rows.add(arr).draw(false);
 table.page('first').draw(false);
-if(isNewData){
+if(isNewData&&!isFirstRender){
 setTimeout(function(){triggerBlinkEffect()},50);
 }
+if(isFirstRender){isFirstRender=false}
 }
 function updateTable(h){
 if(!h||!h.length)return;
@@ -1024,9 +997,11 @@ ws.onerror=function(){};
 conn();
 function updateJam(){
 var n=new Date();
+var days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+var hari=days[n.getDay()];
 var tgl=n.toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
 var jam=n.toLocaleTimeString('id-ID',{hour12:false});
-document.getElementById("jam").textContent=tgl+" "+jam+" WIB ";
+document.getElementById("jam").textContent=hari+", "+tgl+" | "+jam+" WIB";
 }
 setInterval(updateJam,1000);
 updateJam();
@@ -1097,13 +1072,8 @@ async def lifespan(app: FastAPI):
     await asyncio.gather(*tasks, return_exceptions=True)
 
 
-app = FastAPI(title="Gold Monitor", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title="Gold Monitor", lifespan=lifespan)
 app.add_middleware(GZipMiddleware, minimum_size=500)
-
-
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
-if ALLOWED_HOSTS != ["*"]:
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
 
 
 @app.middleware("http")
@@ -1142,18 +1112,11 @@ async def security_middleware(request: Request, call_next):
         record_failed_attempt(client_ip, weight=3)
         return Response(content='{"error":"forbidden"}', status_code=403, media_type="application/json")
     
-    if path_lower.startswith("/aturt") and path_lower != "/aturt" and not path_lower.startswith("/aturts/"):
+    if path_lower.startswith("/aturt") and path_lower != "/aturt" and not path_lower.startswith("/aturtS/"):
         record_failed_attempt(client_ip, weight=2)
         return Response(content='{"error":"invalid"}', status_code=400, media_type="application/json")
     
-    response = await call_next(request)
-    
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    
-    return response
+    return await call_next(request)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -1167,11 +1130,6 @@ async def get_state():
         content=await state_cache.get_state_bytes(),
         media_type="application/json"
     )
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "ok", "connections": manager.count}
 
 
 @app.get("/aturTS")
@@ -1287,6 +1245,4 @@ if __name__ == "__main__":
         limit_concurrency=500,
         backlog=256,
         timeout_keep_alive=30,
-        proxy_headers=True,
-        forwarded_allow_ips="*",
     )
