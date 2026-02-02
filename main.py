@@ -578,7 +578,7 @@ h3{margin:20px 0 10px}
 .dark-mode .tele-icon{background:#29b6f6}
 .dark-mode .tele-link:hover .tele-icon{background:#0288d1}
 .dark-mode .tele-text{color:#00E124}
-#jam{font-size:1.3em;color:#ff1744;font-weight:bold;margin-bottom:8px}
+#jam{font-size:1.4em;color:#ff1744;font-weight:bold;margin-bottom:8px}
 table.dataTable{width:100%!important;border-collapse:collapse}
 table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:0.95em;border-bottom:2px solid #ddd}
 table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee}
@@ -654,10 +654,10 @@ background:#fff;
 z-index:3;
 }
 .dark-mode #tabel thead th.waktu{
-background:#23272b!important;
+background:#23272b;
 }
 .dark-mode #tabel tbody td.waktu{
-background:#23272b!important;
+background:#23272b;
 }
 
 @keyframes blink-yellow{
@@ -669,10 +669,10 @@ background:#23272b!important;
 50%{background-color:#ffd600}
 }
 #tabel tbody tr.blink-row td.waktu{
-animation:blink-yellow 0.4s ease-in-out 5!important;
+animation:blink-yellow 0.4s ease-in-out 5;
 }
 .dark-mode #tabel tbody tr.blink-row td.waktu{
-animation:blink-yellow-dark 0.4s ease-in-out 5!important;
+animation:blink-yellow-dark 0.4s ease-in-out 5;
 }
 
 @media(max-width:768px){
@@ -683,9 +683,9 @@ h3{font-size:1em;margin:15px 0 8px}
 .tele-icon{width:28px;height:28px}
 .tele-icon svg{width:16px;height:16px}
 .tele-text{font-size:0.85em}
-#jam{font-size:1.1em;margin-bottom:6px}
+#jam{font-size:1.25em;margin-bottom:6px}
 table.dataTable{font-size:13px;min-width:900px}
-table.dataTable thead th{padding:8px 6px;font-size:0.85em}
+table.dataTable thead th{padding:8px 6px;font-size:0.9em}
 table.dataTable tbody td{padding:7px 5px}
 .theme-toggle-btn{width:40px;height:40px;font-size:1.3em}
 .container-flex{flex-direction:column;gap:15px}
@@ -702,13 +702,15 @@ table.dataTable tbody td{padding:7px 5px}
 .dataTables_wrapper .dataTables_filter input{width:80px!important;font-size:12px!important;padding:4px 6px!important}
 .dataTables_wrapper .dataTables_length select{font-size:12px!important;padding:3px!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important;min-width:auto!important}
-#tabel{min-width:880px!important}
-#tabel tbody td{font-size:12px!important;padding:6px 4px!important}
+#tabel{min-width:820px!important}
+#tabel thead th{font-size:13px!important}
+#tabel thead th.waktu{font-size:13px!important}
+#tabel thead th.transaksi{font-size:13px!important}
+#tabel thead th.profit{font-size:12px!important}
+#tabel tbody td{font-size:12px!important;padding:6px 3px!important}
 #tabel tbody td.waktu{width:70px!important;min-width:65px!important;max-width:75px!important;padding-left:1px!important;padding-right:1px!important}
-#tabel tbody td.transaksi{min-width:220px!important}
-#tabel tbody td.profit{width:125px!important;min-width:115px!important;max-width:135px!important}
-#tabel thead th.profit{font-size:11px!important}
-#tabel thead th.waktu{padding-left:1px!important;padding-right:1px!important}
+#tabel tbody td.transaksi{min-width:190px!important;padding-left:3px!important;padding-right:3px!important}
+#tabel tbody td.profit{width:115px!important;min-width:105px!important;max-width:125px!important;padding-left:3px!important;padding-right:3px!important}
 .profit-order-btns{display:flex}
 .filter-wrap{flex-wrap:nowrap}
 .chart-header{flex-direction:row;gap:8px}
@@ -724,9 +726,9 @@ h3{font-size:0.95em;margin:12px 0 8px}
 .tele-icon{width:24px;height:24px}
 .tele-icon svg{width:14px;height:14px}
 .tele-text{font-size:0.8em}
-#jam{font-size:1em;margin-bottom:5px}
+#jam{font-size:1.15em;margin-bottom:5px}
 table.dataTable{font-size:12px;min-width:850px}
-table.dataTable thead th{padding:6px 4px;font-size:0.8em}
+table.dataTable thead th{padding:6px 4px;font-size:0.85em}
 table.dataTable tbody td{padding:5px 4px}
 th.waktu,td.waktu{width:65px;min-width:60px;max-width:70px}
 th.profit,td.profit{width:115px;min-width:105px;max-width:125px}
@@ -747,13 +749,15 @@ th.profit,td.profit{width:115px;min-width:105px;max-width:125px}
 .dataTables_wrapper .dataTables_length select{font-size:11px!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:3px 8px!important;font-size:11px!important}
 #priceList{max-height:200px}
-#tabel{min-width:820px!important}
-#tabel tbody td{font-size:11px!important;padding:5px 3px!important}
+#tabel{min-width:760px!important}
+#tabel thead th{font-size:12px!important}
+#tabel thead th.waktu{font-size:12px!important}
+#tabel thead th.transaksi{font-size:12px!important}
+#tabel thead th.profit{font-size:11px!important}
+#tabel tbody td{font-size:11px!important;padding:5px 2px!important}
 #tabel tbody td.waktu{width:62px!important;min-width:58px!important;max-width:68px!important;padding-left:1px!important;padding-right:1px!important}
-#tabel tbody td.transaksi{min-width:200px!important}
-#tabel tbody td.profit{width:110px!important;min-width:100px!important;max-width:120px!important}
-#tabel thead th.profit{font-size:10px!important}
-#tabel thead th.waktu{padding-left:1px!important;padding-right:1px!important;font-size:10px!important}
+#tabel tbody td.transaksi{min-width:170px!important;padding-left:2px!important;padding-right:2px!important}
+#tabel tbody td.profit{width:105px!important;min-width:95px!important;max-width:115px!important;padding-left:2px!important;padding-right:2px!important}
 .profit-btn{padding:4px 8px;font-size:11px}
 .chart-header h3{font-size:0.9em}
 .limit-label{font-size:0.8em}
