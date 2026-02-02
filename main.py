@@ -684,7 +684,7 @@ h3{font-size:1.05em;margin:15px 0 8px}
 .tele-icon{width:30px;height:30px}
 .tele-icon svg{width:16px;height:16px}
 .tele-text{font-size:0.9em}
-#jam{font-size:1.3em;margin-bottom:8px}
+#jam{font-size:2em;margin-bottom:8px}
 .theme-toggle-btn{width:42px;height:42px;font-size:1.4em}
 .container-flex{flex-direction:row;gap:15px}
 .card-usd{width:220px;height:350px}
@@ -738,7 +738,7 @@ h3{font-size:0.95em;margin:12px 0 8px}
 .tele-icon{width:28px;height:28px}
 .tele-icon svg{width:15px;height:15px}
 .tele-text{font-size:0.85em}
-#jam{font-size:1.2em;margin-bottom:6px}
+#jam{font-size:2em;margin-bottom:6px}
 .theme-toggle-btn{width:38px;height:38px;font-size:1.3em}
 .container-flex{flex-direction:column;gap:15px}
 .card-usd,.card-chart{width:100%!important;max-width:100%!important;min-width:0!important}
@@ -851,7 +851,7 @@ h3{font-size:0.88em;margin:10px 0 6px}
 .tele-icon{width:24px;height:24px}
 .tele-icon svg{width:13px;height:13px}
 .tele-text{font-size:0.75em}
-#jam{font-size:1.05em;margin-bottom:4px}
+#jam{font-size:1.3em;margin-bottom:4px}
 .theme-toggle-btn{width:34px;height:34px;font-size:1.1em}
 .container-flex{flex-direction:column;gap:10px}
 .card-usd,.card-chart{width:100%!important;max-width:100%!important;min-width:0!important}
