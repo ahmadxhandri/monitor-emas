@@ -582,7 +582,7 @@ h3{margin:20px 0 10px}
 .dark-mode .tele-icon{background:#29b6f6}
 .dark-mode .tele-link:hover .tele-icon{background:#0288d1}
 .dark-mode .tele-text{color:#00E124}
-#jam{font-size:1.4em;color:#ff1744;font-weight:bold;margin-bottom:8px}
+#jam{font-size:2em;color:#ff1744;font-weight:bold;margin-bottom:8px}
 table.dataTable{width:100%!important;border-collapse:collapse}
 table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:1em;border-bottom:2px solid #ddd}
 table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee;font-size:1em}
