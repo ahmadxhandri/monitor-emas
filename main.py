@@ -579,11 +579,11 @@ h3{margin:20px 0 10px}
 .dark-mode .tele-link:hover .tele-icon{background:#0288d1}
 .dark-mode .tele-text{color:#00E124}
 #jam{font-size:1.4em;color:#ff1744;font-weight:bold;margin-bottom:8px}
-table.dataTable{width:100%!important;border-collapse:collapse}
+table.dataTable{width:100%!important;border-collapse:collapse;table-layout:fixed}
 table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:0.95em;border-bottom:2px solid #ddd}
 table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee}
 th.waktu,td.waktu{width:78px;min-width:72px;max-width:82px;text-align:center;padding-left:2px!important;padding-right:2px!important}
-th.transaksi,td.transaksi{text-align:left;min-width:280px}
+th.transaksi,td.transaksi{text-align:left;min-width:220px}
 th.profit,td.profit{width:155px;min-width:145px;max-width:165px;text-align:left;padding-left:8px!important;padding-right:8px!important}
 .theme-toggle-btn{padding:0;border:none;border-radius:50%;background:#222;color:#fff;cursor:pointer;font-size:1.5em;width:44px;height:44px;display:flex;align-items:center;justify-content:center;transition:background .3s}
 .theme-toggle-btn:hover{background:#444}
@@ -702,14 +702,14 @@ table.dataTable tbody td{padding:7px 5px}
 .dataTables_wrapper .dataTables_filter input{width:80px!important;font-size:12px!important;padding:4px 6px!important}
 .dataTables_wrapper .dataTables_length select{font-size:12px!important;padding:3px!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important;min-width:auto!important}
-#tabel{min-width:820px!important}
+#tabel{min-width:780px!important;table-layout:fixed!important}
 #tabel thead th{font-size:13px!important}
 #tabel thead th.waktu{font-size:13px!important}
-#tabel thead th.transaksi{font-size:13px!important}
+#tabel thead th.transaksi{width:210px!important;min-width:175px!important;max-width:2300px!important;font-size:13px!important}
 #tabel thead th.profit{font-size:12px!important}
 #tabel tbody td{font-size:12px!important;padding:6px 3px!important}
 #tabel tbody td.waktu{width:70px!important;min-width:65px!important;max-width:75px!important;padding-left:1px!important;padding-right:1px!important}
-#tabel tbody td.transaksi{min-width:190px!important;padding-left:3px!important;padding-right:3px!important}
+#tabel tbody td.transaksi{width:180px!important;min-width:175px!important;max-width:190px!important;padding:5px 3px!important}
 #tabel tbody td.profit{width:115px!important;min-width:105px!important;max-width:125px!important;padding-left:3px!important;padding-right:3px!important}
 .profit-order-btns{display:flex}
 .filter-wrap{flex-wrap:nowrap}
@@ -749,14 +749,14 @@ th.profit,td.profit{width:115px;min-width:105px;max-width:125px}
 .dataTables_wrapper .dataTables_length select{font-size:11px!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:3px 8px!important;font-size:11px!important}
 #priceList{max-height:200px}
-#tabel{min-width:760px!important}
+#tabel{min-width:720px!important;table-layout:fixed!important}
 #tabel thead th{font-size:12px!important}
 #tabel thead th.waktu{font-size:12px!important}
-#tabel thead th.transaksi{font-size:12px!important}
+#tabel thead th.transaksi{width:192px!important;min-width:190px!important;max-width:193px!important;font-size:12px!important}
 #tabel thead th.profit{font-size:11px!important}
 #tabel tbody td{font-size:11px!important;padding:5px 2px!important}
 #tabel tbody td.waktu{width:62px!important;min-width:58px!important;max-width:68px!important;padding-left:1px!important;padding-right:1px!important}
-#tabel tbody td.transaksi{min-width:170px!important;padding-left:2px!important;padding-right:2px!important}
+#tabel tbody td.transaksi{width:185px!important;min-width:170px!important;max-width:195px!important;padding:4px 2px!important}
 #tabel tbody td.profit{width:105px!important;min-width:95px!important;max-width:115px!important;padding-left:2px!important;padding-right:2px!important}
 .profit-btn{padding:4px 8px;font-size:11px}
 .chart-header h3{font-size:0.9em}
@@ -914,7 +914,7 @@ updateTableHeaders();
 var arr=h.map(function(d){
 return{
 waktu:d.waktu_display,
-transaction:'Beli: '+d.buying_rate+' | Jual: '+d.selling_rate+' | '+d.diff_display,
+transaction:'Beli: '+d.buying_rate+' Jual: '+d.selling_rate+''+d.diff_display,
 p1:d[keys[0]],
 p2:d[keys[1]],
 p3:d[keys[2]],
@@ -1024,39 +1024,6 @@ document.getElementById('themeBtn').textContent="☀️";
 }
 setTimeout(createTradingViewWidget,100);
 })();
-</script>
-</body>
-</html>"""
-
-HTML_RATE_LIMITED = """<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Terlalu Banyak Request</title>
-<style>
-body{font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f5f5f5}
-.container{text-align:center;padding:40px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,0.1);max-width:400px}
-h1{color:#ff1744;margin-bottom:10px}
-p{color:#666;margin-bottom:20px}
-.countdown{font-size:2em;color:#ff1744;font-weight:bold}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>⚠️ Terlalu Banyak Request</h1>
-<p>Anda telah melebihi batas request. Silakan tunggu sebelum mencoba lagi.</p>
-<div class="countdown" id="cd">60</div>
-<p style="font-size:0.9em;color:#999">Halaman akan refresh otomatis</p>
-</div>
-<script>
-var s=60;
-var el=document.getElementById('cd');
-var t=setInterval(function(){
-s--;
-el.textContent=s;
-if(s<=0){clearInterval(t);location.reload()}
-},1000);
 </script>
 </body>
 </html>"""
