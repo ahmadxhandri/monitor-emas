@@ -579,7 +579,7 @@ h3{margin:20px 0 10px}
 .dark-mode .tele-link:hover .tele-icon{background:#0288d1}
 .dark-mode .tele-text{color:#00E124}
 #jam{font-size:1.4em;color:#ff1744;font-weight:bold;margin-bottom:8px}
-table.dataTable{width:100%!important;border-collapse:collapse;table-layout:fixed}
+table.dataTable{width:100%!important;border-collapse:collapse}
 table.dataTable thead th{font-weight:bold;white-space:nowrap;padding:10px 8px;font-size:0.95em;border-bottom:2px solid #ddd}
 table.dataTable tbody td{padding:8px 6px;white-space:nowrap;border-bottom:1px solid #eee}
 th.waktu,td.waktu{width:78px;min-width:72px;max-width:82px;text-align:center;padding-left:2px!important;padding-right:2px!important}
@@ -620,7 +620,7 @@ th.profit,td.profit{width:155px;min-width:145px;max-width:165px;text-align:left;
 .dataTables_wrapper .dataTables_paginate{margin-top:10px!important;text-align:center!important}
 .tbl-wrap{margin-top:0!important;padding-top:0!important}
 #tabel.dataTable{margin-top:0!important}
-#tabel tbody td.transaksi{padding:6px 8px; white-space: nowrap;}
+#tabel tbody td.transaksi{padding:6px 8px;white-space:nowrap}
 .profit-order-btns{display:none;gap:3px;align-items:center;margin-right:6px}
 .profit-btn{padding:5px 10px;border:1px solid #aaa;background:#f0f0f0;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;transition:all .2s}
 .profit-btn:hover{background:#ddd}
@@ -675,93 +675,254 @@ animation:blink-yellow 0.4s ease-in-out 5;
 animation:blink-yellow-dark 0.4s ease-in-out 5;
 }
 
-@media(max-width:768px){
+/* TABLET LANDSCAPE & PORTRAIT (768px - 1024px) */
+@media(min-width:768px) and (max-width:1024px){
+body{padding:15px;padding-bottom:50px}
+h2{font-size:1.15em}
+h3{font-size:1.05em;margin:15px 0 8px}
+.header{margin-bottom:4px}
+.tele-icon{width:30px;height:30px}
+.tele-icon svg{width:16px;height:16px}
+.tele-text{font-size:0.9em}
+#jam{font-size:1.3em;margin-bottom:8px}
+.theme-toggle-btn{width:42px;height:42px;font-size:1.4em}
+.container-flex{flex-direction:row;gap:15px}
+.card-usd{width:220px;height:350px}
+.card-chart{flex:1;min-width:350px;height:350px}
+.card-calendar{max-width:100%;height:auto}
+.calendar-iframe{height:400px;min-width:680px}
+.dt-top-controls{flex-direction:row;justify-content:space-between;gap:8px;margin-bottom:8px;padding:6px 0}
+.dataTables_wrapper .dataTables_length{font-size:13px!important}
+.dataTables_wrapper .dataTables_filter{font-size:13px!important}
+.dataTables_wrapper .dataTables_filter input{width:100px!important;font-size:13px!important;padding:5px 8px!important}
+.dataTables_wrapper .dataTables_length select{font-size:13px!important;padding:4px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:5px 12px!important;font-size:13px!important}
+/* Table sizing for tablet */
+#tabel{min-width:950px!important;table-layout:fixed!important}
+#tabel thead th{font-size:13px!important;padding:8px 5px!important}
+#tabel tbody td{font-size:12px!important;padding:7px 4px!important}
+/* Waktu column */
+#tabel thead th.waktu,
+#tabel tbody td.waktu{
+width:75px!important;
+min-width:70px!important;
+max-width:80px!important;
+padding-left:2px!important;
+padding-right:2px!important;
+}
+/* Transaksi column - FIXED WIDTH */
+#tabel thead th.transaksi,
+#tabel tbody td.transaksi{
+width:230px!important;
+min-width:225px!important;
+max-width:235px!important;
+padding:6px 8px!important;
+}
+/* Profit columns */
+#tabel thead th.profit,
+#tabel tbody td.profit{
+width:125px!important;
+min-width:120px!important;
+max-width:130px!important;
+padding-left:6px!important;
+padding-right:6px!important;
+}
+.profit-order-btns{display:flex}
+.profit-btn{padding:5px 10px;font-size:12px}
+.chart-header{flex-direction:row;gap:10px}
+.chart-header h3{font-size:1em}
+.limit-label{font-size:0.9em}
+.limit-label .limit-num{font-size:1.05em;padding:2px 7px}
+}
+
+/* MOBILE LARGE & TABLET SMALL (576px - 767px) */
+@media(min-width:576px) and (max-width:767px){
 body{padding:12px;padding-bottom:50px}
-h2{font-size:1.1em}
-h3{font-size:1em;margin:15px 0 8px}
+h2{font-size:1.05em}
+h3{font-size:0.95em;margin:12px 0 8px}
 .header{margin-bottom:2px}
 .tele-icon{width:28px;height:28px}
-.tele-icon svg{width:16px;height:16px}
+.tele-icon svg{width:15px;height:15px}
 .tele-text{font-size:0.85em}
-#jam{font-size:1.25em;margin-bottom:6px}
-table.dataTable{font-size:13px;min-width:900px}
-table.dataTable thead th{padding:8px 6px;font-size:0.9em}
-table.dataTable tbody td{padding:7px 5px}
-.theme-toggle-btn{width:40px;height:40px;font-size:1.3em}
+#jam{font-size:1.2em;margin-bottom:6px}
+.theme-toggle-btn{width:38px;height:38px;font-size:1.3em}
 .container-flex{flex-direction:column;gap:15px}
 .card-usd,.card-chart{width:100%!important;max-width:100%!important;min-width:0!important}
-.card-usd{height:auto;min-height:320px}
-.card-chart{height:380px}
+.card-usd{height:auto;min-height:300px}
+.card-chart{height:360px}
 .card-calendar{max-width:100%;height:auto;padding:0}
 .calendar-section{margin-bottom:50px}
 .calendar-wrap{margin:0 -12px;padding:0 12px;width:calc(100% + 24px)}
-.calendar-iframe{height:380px;min-width:650px}
+.calendar-iframe{height:380px;min-width:620px}
 .dt-top-controls{flex-direction:row;justify-content:space-between;gap:5px;margin-bottom:8px;padding:5px 0}
 .dataTables_wrapper .dataTables_length{font-size:12px!important}
 .dataTables_wrapper .dataTables_filter{font-size:12px!important}
-.dataTables_wrapper .dataTables_filter input{width:80px!important;font-size:12px!important;padding:4px 6px!important}
+.dataTables_wrapper .dataTables_filter input{width:85px!important;font-size:12px!important;padding:4px 6px!important}
 .dataTables_wrapper .dataTables_length select{font-size:12px!important;padding:3px!important}
-.dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important;min-width:auto!important}
-#tabel{min-width:780px!important;table-layout:fixed!important}
-#tabel thead th{font-size:13px!important}
-#tabel thead th.waktu{width:70px!important;font-size:13px!important}
-#tabel thead th.transaksi{width:180px!important;min-width:175px!important;max-width:190px!important;font-size:13px!important}
-#tabel thead th.profit{width:115px!important;font-size:12px!important}
-#tabel tbody td{font-size:12px!important;padding:6px 3px!important}
-#tabel tbody td.waktu{width:70px!important;min-width:65px!important;max-width:75px!important;padding-left:1px!important;padding-right:1px!important}
-#tabel tbody td.transaksi{width:180px!important;min-width:175px!important;max-width:190px!important;padding:5px 3px!important}
-#tabel tbody td.profit{width:115px!important;min-width:105px!important;max-width:125px!important;padding-left:3px!important;padding-right:3px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important}
+/* Table sizing */
+#tabel{min-width:880px!important;table-layout:fixed!important}
+#tabel thead th{font-size:12px!important;padding:7px 4px!important}
+#tabel tbody td{font-size:11px!important;padding:6px 3px!important}
+/* Waktu column */
+#tabel thead th.waktu,
+#tabel tbody td.waktu{
+width:70px!important;
+min-width:65px!important;
+max-width:75px!important;
+}
+/* Transaksi column - FIXED */
+#tabel thead th.transaksi,
+#tabel tbody td.transaksi{
+width:210px!important;
+min-width:205px!important;
+max-width:215px!important;
+padding:5px 6px!important;
+}
+/* Profit columns */
+#tabel thead th.profit,
+#tabel tbody td.profit{
+width:115px!important;
+min-width:110px!important;
+max-width:120px!important;
+padding-left:4px!important;
+padding-right:4px!important;
+}
 .profit-order-btns{display:flex}
-.filter-wrap{flex-wrap:nowrap}
+.profit-btn{padding:4px 9px;font-size:11px}
 .chart-header{flex-direction:row;gap:8px}
 .chart-header h3{font-size:0.95em}
 .limit-label{font-size:0.85em}
 }
-@media(max-width:480px){
-body{padding:10px;padding-bottom:45px}
+
+/* MOBILE MEDIUM (480px - 575px) */
+@media(min-width:480px) and (max-width:575px){
+body{padding:10px;padding-bottom:48px}
 h2{font-size:1em}
-h3{font-size:0.95em;margin:12px 0 8px}
-.header{margin-bottom:1px}
+h3{font-size:0.92em;margin:12px 0 6px}
+.header{margin-bottom:2px}
 .title-wrap{gap:6px}
-.tele-icon{width:24px;height:24px}
+.tele-icon{width:26px;height:26px}
 .tele-icon svg{width:14px;height:14px}
 .tele-text{font-size:0.8em}
 #jam{font-size:1.15em;margin-bottom:5px}
-table.dataTable{font-size:12px;min-width:850px}
-table.dataTable thead th{padding:6px 4px;font-size:0.85em}
-table.dataTable tbody td{padding:5px 4px}
-th.waktu,td.waktu{width:65px;min-width:60px;max-width:70px}
-th.profit,td.profit{width:115px;min-width:105px;max-width:125px}
 .theme-toggle-btn{width:36px;height:36px;font-size:1.2em}
-.container-flex{gap:12px}
-.card{padding:8px}
-.card-usd{min-height:280px}
+.container-flex{flex-direction:column;gap:12px}
+.card-usd,.card-chart{width:100%!important;max-width:100%!important;min-width:0!important}
+.card-usd{height:auto;min-height:280px}
 .card-chart{height:340px}
+.card{padding:8px}
 .card-calendar{height:auto;padding:0}
-.calendar-section{margin:20px 0 45px 0}
+.calendar-section{margin:18px 0 45px 0}
 .calendar-wrap{margin:0 -10px;padding:0 10px;width:calc(100% + 20px)}
-.calendar-iframe{height:350px;min-width:600px}
-#footerApp{padding:5px 0}
+.calendar-iframe{height:360px;min-width:580px}
+#footerApp{padding:6px 0}
 .marquee-text{font-size:12px}
-.dt-top-controls{gap:3px;margin-bottom:6px}
+.dt-top-controls{gap:4px;margin-bottom:6px}
 .dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{font-size:11px!important}
-.dataTables_wrapper .dataTables_filter input{width:65px!important;font-size:11px!important}
+.dataTables_wrapper .dataTables_filter input{width:75px!important;font-size:11px!important}
 .dataTables_wrapper .dataTables_length select{font-size:11px!important}
-.dataTables_wrapper .dataTables_paginate .paginate_button{padding:3px 8px!important;font-size:11px!important}
-#priceList{max-height:200px}
-#tabel{min-width:720px!important;table-layout:fixed!important}
-#tabel thead th{font-size:12px!important}
-#tabel thead th.waktu{font-size:12px!important}
-#tabel thead th.transaksi{width:192px!important;min-width:190px!important;max-width:193px!important;font-size:12px!important}
-#tabel thead th.profit{font-size:11px!important}
-#tabel tbody td{font-size:11px!important;padding:5px 2px!important}
-#tabel tbody td.waktu{width:62px!important;min-width:58px!important;max-width:68px!important;padding-left:1px!important;padding-right:1px!important}
-#tabel tbody td.transaksi{width:185px!important;min-width:170px!important;max-width:195px!important;padding:4px 2px!important}
-#tabel tbody td.profit{width:105px!important;min-width:95px!important;max-width:115px!important;padding-left:2px!important;padding-right:2px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 9px!important;font-size:11px!important}
+#priceList{max-height:220px}
+/* Table sizing */
+#tabel{min-width:820px!important;table-layout:fixed!important}
+#tabel thead th{font-size:11px!important;padding:6px 3px!important}
+#tabel tbody td{font-size:11px!important;padding:5px 3px!important}
+/* Waktu column */
+#tabel thead th.waktu,
+#tabel tbody td.waktu{
+width:65px!important;
+min-width:60px!important;
+max-width:70px!important;
+}
+/* Transaksi column - FIXED */
+#tabel thead th.transaksi,
+#tabel tbody td.transaksi{
+width:200px!important;
+min-width:195px!important;
+max-width:205px!important;
+padding:5px 5px!important;
+}
+/* Profit columns */
+#tabel thead th.profit,
+#tabel tbody td.profit{
+width:108px!important;
+min-width:103px!important;
+max-width:113px!important;
+padding-left:3px!important;
+padding-right:3px!important;
+}
+.profit-order-btns{display:flex}
 .profit-btn{padding:4px 8px;font-size:11px}
 .chart-header h3{font-size:0.9em}
-.limit-label{font-size:0.8em}
+.limit-label{font-size:0.82em}
 .limit-label .limit-num{font-size:1em;padding:1px 6px}
+}
+
+/* MOBILE SMALL (max-width: 479px) */
+@media(max-width:479px){
+body{padding:8px;padding-bottom:45px}
+h2{font-size:0.95em}
+h3{font-size:0.88em;margin:10px 0 6px}
+.header{margin-bottom:1px}
+.title-wrap{gap:5px}
+.tele-icon{width:24px;height:24px}
+.tele-icon svg{width:13px;height:13px}
+.tele-text{font-size:0.75em}
+#jam{font-size:1.05em;margin-bottom:4px}
+.theme-toggle-btn{width:34px;height:34px;font-size:1.1em}
+.container-flex{flex-direction:column;gap:10px}
+.card-usd,.card-chart{width:100%!important;max-width:100%!important;min-width:0!important}
+.card-usd{height:auto;min-height:260px}
+.card-chart{height:320px}
+.card{padding:6px}
+.card-calendar{height:auto;padding:0}
+.calendar-section{margin:15px 0 40px 0}
+.calendar-wrap{margin:0 -8px;padding:0 8px;width:calc(100% + 16px)}
+.calendar-iframe{height:340px;min-width:550px}
+#footerApp{padding:5px 0}
+.marquee-text{font-size:11px}
+.dt-top-controls{gap:3px;margin-bottom:5px}
+.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter{font-size:10px!important}
+.dataTables_wrapper .dataTables_filter input{width:60px!important;font-size:10px!important}
+.dataTables_wrapper .dataTables_length select{font-size:10px!important}
+.dataTables_wrapper .dataTables_paginate .paginate_button{padding:3px 7px!important;font-size:10px!important}
+#priceList{max-height:190px}
+/* Table sizing */
+#tabel{min-width:760px!important;table-layout:fixed!important}
+#tabel thead th{font-size:10px!important;padding:5px 2px!important}
+#tabel tbody td{font-size:10px!important;padding:4px 2px!important}
+/* Waktu column */
+#tabel thead th.waktu,
+#tabel tbody td.waktu{
+width:60px!important;
+min-width:55px!important;
+max-width:65px!important;
+padding-left:1px!important;
+padding-right:1px!important;
+}
+/* Transaksi column - FIXED */
+#tabel thead th.transaksi,
+#tabel tbody td.transaksi{
+width:190px!important;
+min-width:185px!important;
+max-width:195px!important;
+padding:4px 4px!important;
+}
+/* Profit columns */
+#tabel thead th.profit,
+#tabel tbody td.profit{
+width:100px!important;
+min-width:95px!important;
+max-width:105px!important;
+padding-left:2px!important;
+padding-right:2px!important;
+}
+.profit-order-btns{display:flex}
+.profit-btn{padding:3px 6px;font-size:10px}
+.chart-header h3{font-size:0.85em}
+.limit-label{font-size:0.78em}
+.limit-label .limit-num{font-size:0.95em;padding:1px 5px}
 }
 </style>
 </head>
