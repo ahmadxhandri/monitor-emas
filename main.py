@@ -620,7 +620,7 @@ th.profit,td.profit{width:155px;min-width:145px;max-width:165px;text-align:left;
 .dataTables_wrapper .dataTables_paginate{margin-top:10px!important;text-align:center!important}
 .tbl-wrap{margin-top:0!important;padding-top:0!important}
 #tabel.dataTable{margin-top:0!important}
-#tabel tbody td.transaksi{padding:6px 8px}
+#tabel tbody td.transaksi{padding:6px 8px; white-space: nowrap;}
 .profit-order-btns{display:none;gap:3px;align-items:center;margin-right:6px}
 .profit-btn{padding:5px 10px;border:1px solid #aaa;background:#f0f0f0;border-radius:4px;font-size:12px;cursor:pointer;font-weight:bold;transition:all .2s}
 .profit-btn:hover{background:#ddd}
@@ -704,9 +704,9 @@ table.dataTable tbody td{padding:7px 5px}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:4px 10px!important;font-size:12px!important;min-width:auto!important}
 #tabel{min-width:780px!important;table-layout:fixed!important}
 #tabel thead th{font-size:13px!important}
-#tabel thead th.waktu{font-size:13px!important}
-#tabel thead th.transaksi{width:210px!important;min-width:175px!important;max-width:2300px!important;font-size:13px!important}
-#tabel thead th.profit{font-size:12px!important}
+#tabel thead th.waktu{width:70px!important;font-size:13px!important}
+#tabel thead th.transaksi{width:180px!important;min-width:175px!important;max-width:190px!important;font-size:13px!important}
+#tabel thead th.profit{width:115px!important;font-size:12px!important}
 #tabel tbody td{font-size:12px!important;padding:6px 3px!important}
 #tabel tbody td.waktu{width:70px!important;min-width:65px!important;max-width:75px!important;padding-left:1px!important;padding-right:1px!important}
 #tabel tbody td.transaksi{width:180px!important;min-width:175px!important;max-width:190px!important;padding:5px 3px!important}
