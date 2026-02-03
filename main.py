@@ -1222,7 +1222,7 @@ async def security_middleware(request: Request, call_next):
         record_failed_attempt(client_ip, weight=3)
         return Response(content='{"error":"forbidden"}', status_code=403, media_type="application/json")
     
-    if path_lower.startswith("/aturt") and path_lower != "/aturt" and not path_lower.startswith("/aturtS/"):
+    if path_lower.startswith("/aturTS") and path_lower != "/aturTS" and not path_lower.startswith("/aturTS/"):
         record_failed_attempt(client_ip, weight=2)
         return Response(content='{"error":"invalid"}', status_code=400, media_type="application/json")
     
